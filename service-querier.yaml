@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    cloud.google.com/neg: '{"ingress":true}'
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"name":"querier"},"name":"querier","namespace":"loki"},"spec":{"ports":[{"name":"querier-http-metrics","port":3100,"targetPort":3100},{"name":"querier-grpc","port":9095,"targetPort":9095}],"selector":{"name":"querier"}}}
+  creationTimestamp: "2021-02-22T11:21:39Z"
+  labels:
+    name: querier
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:kubectl.kubernetes.io/last-applied-configuration: {}
+        f:labels:
+          .: {}
+          f:name: {}
+      f:spec:
+        f:ports:
+          .: {}
+          k:{"port":3100,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+          k:{"port":9095,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+        f:selector:
+          .: {}
+          f:name: {}
+        f:sessionAffinity: {}
+        f:type: {}
+    manager: kubectl-client-side-apply
+    operation: Update
+    time: "2021-02-22T11:21:39Z"
+  name: querier
+  namespace: loki
+  resourceVersion: "75255"
+  selfLink: /api/v1/namespaces/loki/services/querier
+  uid: 1cb3c047-fa4a-402e-8c6a-145fbb8af159
+spec:
+  clusterIP: 10.8.14.166
+  ports:
+  - name: querier-http-metrics
+    port: 3100
+    protocol: TCP
+    targetPort: 3100
+  - name: querier-grpc
+    port: 9095
+    protocol: TCP
+    targetPort: 9095
+  selector:
+    name: querier
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

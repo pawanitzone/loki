@@ -1,0 +1,106 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    cloud.google.com/neg: '{"ingress":true}'
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"name":"consul"},"name":"consul","namespace":"loki"},"spec":{"ports":[{"name":"consul-server","port":8300,"targetPort":8300},{"name":"consul-serf","port":8301,"targetPort":8301},{"name":"consul-client","port":8400,"targetPort":8400},{"name":"consul-api","port":8500,"targetPort":8500},{"name":"statsd-exporter-http-metrics","port":8000,"targetPort":8000},{"name":"consul-exporter-http-metrics","port":9107,"targetPort":9107}],"selector":{"name":"consul"}}}
+  creationTimestamp: "2021-02-22T11:21:34Z"
+  labels:
+    name: consul
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:kubectl.kubernetes.io/last-applied-configuration: {}
+        f:labels:
+          .: {}
+          f:name: {}
+      f:spec:
+        f:ports:
+          .: {}
+          k:{"port":8000,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+          k:{"port":8300,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+          k:{"port":8301,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+          k:{"port":8400,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+          k:{"port":8500,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+          k:{"port":9107,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+        f:selector:
+          .: {}
+          f:name: {}
+        f:sessionAffinity: {}
+        f:type: {}
+    manager: kubectl-client-side-apply
+    operation: Update
+    time: "2021-02-22T11:21:34Z"
+  name: consul
+  namespace: loki
+  resourceVersion: "75185"
+  selfLink: /api/v1/namespaces/loki/services/consul
+  uid: cd550297-5167-4525-b7ab-192aecd85a35
+spec:
+  clusterIP: 10.8.11.163
+  ports:
+  - name: consul-server
+    port: 8300
+    protocol: TCP
+    targetPort: 8300
+  - name: consul-serf
+    port: 8301
+    protocol: TCP
+    targetPort: 8301
+  - name: consul-client
+    port: 8400
+    protocol: TCP
+    targetPort: 8400
+  - name: consul-api
+    port: 8500
+    protocol: TCP
+    targetPort: 8500
+  - name: statsd-exporter-http-metrics
+    port: 8000
+    protocol: TCP
+    targetPort: 8000
+  - name: consul-exporter-http-metrics
+    port: 9107
+    protocol: TCP
+    targetPort: 9107
+  selector:
+    name: consul
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
