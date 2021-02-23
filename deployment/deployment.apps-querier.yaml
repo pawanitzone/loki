@@ -58,8 +58,8 @@ spec:
           timeoutSeconds: 1
         resources:
           requests:
-            cpu: "500m"
-            memory: 500mi
+            cpu: "100m"
+            memory: 200Mi
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
