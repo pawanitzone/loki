@@ -98,7 +98,7 @@ data:
                 prefix: loki_index_
             object_store: gcs
             schema: v11
-            store: boltdb-shipper
+            store: bigtable
     server:
         graceful_shutdown_timeout: 5s
         grpc_server_max_concurrent_streams: 1000
@@ -110,6 +110,9 @@ data:
     storage_config:
         gcs:
             bucket_name: lokibucket
+        bigtable:
+            project: skilled-loader-305605
+            instance: bigtableloki
         index_queries_cache_config:
             memcached:
                 batch_size: 100
