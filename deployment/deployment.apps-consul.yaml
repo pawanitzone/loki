@@ -1,0 +1,138 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consul
+  namespace: loki
+spec:
+  minReadySeconds: 10
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      name: consul
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        consul-hash: 5778cd539088c126eed973ed617144e1
+      creationTimestamp: null
+      labels:
+        name: consul
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                name: consul
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - args:
+        - agent
+        - -ui
+        - -server
+        - -client=0.0.0.0
+        - -config-file=/etc/config/consul-config.json
+        - -bootstrap-expect=1
+        env:
+        - name: CHECKPOINT_DISABLE
+          value: "1"
+        image: consul:1.5.3
+        imagePullPolicy: IfNotPresent
+        name: consul
+        ports:
+        - containerPort: 8300
+          name: server
+          protocol: TCP
+        - containerPort: 8301
+          name: serf
+          protocol: TCP
+        - containerPort: 8400
+          name: client
+          protocol: TCP
+        - containerPort: 8500
+          name: api
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 100m
+            memory: 500Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/config
+          name: consul
+      - args:
+        - --namespace=$(POD_NAMESPACE)
+        - --pod-name=$(POD_NAME)
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        image: weaveworks/consul-sidekick:master-f18ad13
+        imagePullPolicy: IfNotPresent
+        name: sidekick
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/config
+          name: consul
+      - args:
+        - --web.listen-address=:8000
+        - --statsd.mapping-config=/etc/config/mapping
+        image: prom/statsd-exporter:v0.12.2
+        imagePullPolicy: IfNotPresent
+        name: statsd-exporter
+        ports:
+        - containerPort: 8000
+          name: http-metrics
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/config
+          name: consul
+      - args:
+        - --consul.server=localhost:8500
+        - --web.listen-address=:9107
+        - --consul.timeout=1s
+        image: prom/consul-exporter:v0.5.0
+        imagePullPolicy: IfNotPresent
+        name: consul-exporter
+        ports:
+        - containerPort: 9107
+          name: http-metrics
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/config
+          name: consul
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: consul-sidekick
+      serviceAccountName: consul-sidekick
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: consul
+        name: consul
+
